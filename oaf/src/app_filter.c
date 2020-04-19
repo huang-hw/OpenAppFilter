@@ -803,6 +803,18 @@ void af_update_client_app_info(flow_info_t *flow)
 
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
+extern u_int32_t nfclient_hook(void *priv,
+			       struct sk_buff *skb,
+			       const struct nf_hook_state *state);
+#else
+extern u_int32_t nfclient_hook(unsigned int hook,
+						    	struct sk_buff *skb,
+					           const struct net_device *in,
+					           const struct net_device *out,
+					           int (*okfn)(struct sk_buff *));
+#endif
+
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
 static u_int32_t app_filter_hook(void *priv,
 			       struct sk_buff *skb,
 			       const struct nf_hook_state *state) {
@@ -824,6 +836,11 @@ static u_int32_t app_filter_hook(unsigned int hook,
 	if(ct == NULL) {
         return NF_ACCEPT;
     }
+
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
+	AF_INFO("enter nfclient_hook\n");
+	nfclient_hook(priv, skb, state);
+#endif	
 
 	if(!nf_ct_is_confirmed(ct)){
 		return NF_ACCEPT;
