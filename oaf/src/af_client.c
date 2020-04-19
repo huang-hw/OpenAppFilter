@@ -157,11 +157,13 @@ static inline int get_packet_dir(struct net_device *in)
 }
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
-static u_int32_t nfclient_hook(void *priv,
+//static
+u_int32_t nfclient_hook(void *priv,
 			       struct sk_buff *skb,
 			       const struct nf_hook_state *state) {
 #else
-static u_int32_t nfclient_hook(unsigned int hook,
+//static 
+u_int32_t nfclient_hook(unsigned int hook,
 						    	struct sk_buff *skb,
 					           const struct net_device *in,
 					           const struct net_device *out,
@@ -234,7 +236,7 @@ static u_int32_t nfclient_hook(unsigned int hook,
 
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
-static struct nf_hook_ops af_client_ops[] = {
+static struct nf_hook_ops af_client_ops[] __read_mostly = {
 	{
 		.hook		= nfclient_hook,
 		.pf			= PF_INET,
@@ -243,7 +245,7 @@ static struct nf_hook_ops af_client_ops[] = {
 	},
 };
 #else
-static struct nf_hook_ops af_client_ops[] = {
+static struct nf_hook_ops af_client_ops[] __read_mostly = {
 	{
 		.hook		= nfclient_hook,
 		.owner		= THIS_MODULE,
