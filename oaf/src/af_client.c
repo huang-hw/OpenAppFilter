@@ -157,13 +157,11 @@ static inline int get_packet_dir(struct net_device *in)
 }
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
-//static
-u_int32_t nfclient_hook(void *priv,
+static u_int32_t nfclient_hook(void *priv,
 			       struct sk_buff *skb,
 			       const struct nf_hook_state *state) {
 #else
-//static 
-u_int32_t nfclient_hook(unsigned int hook,
+static u_int32_t nfclient_hook(unsigned int hook,
 						    	struct sk_buff *skb,
 					           const struct net_device *in,
 					           const struct net_device *out,
@@ -192,11 +190,13 @@ u_int32_t nfclient_hook(unsigned int hook,
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
 	if(!skb->dev) {
-		AF_DEBUG("skb->dev == NULL\n");
+		AF_DEBUG("skb->dev == NULL MAC:"MAC_FMT"\n", MAC_ARRAY(node->mac));
 		pkt_dir = PKT_DIR_UP;
 		//return NF_ACCEPT;
 	} else {
 		pkt_dir = get_packet_dir(skb->dev);
+		AF_DEBUG("skb->dev->name:%s MAC:"MAC_FMT"\n", skb->dev->name, MAC_ARRAY(node->mac));
+		pkt_dir = PKT_DIR_UP;
 	}
 #else
 	if (!in){
