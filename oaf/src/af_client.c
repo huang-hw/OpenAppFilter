@@ -181,11 +181,21 @@ static u_int32_t nfclient_hook(unsigned int hook,
 		return NF_ACCEPT;
 	}
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
-	if(!skb->dev)
-		return NF_ACCEPT;
+    ethhdr = eth_hdr(skb);
+    if (ethhdr) {
+        memcpy(smac, ethhdr->h_source, ETH_ALEN);
+    } else {
+        memcpy(smac, &skb->cb[40], ETH_ALEN);
+    }
 
-	pkt_dir = get_packet_dir(skb->dev);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
+	if(!skb->dev) {
+		AF_DEBUG("skb->dev == NULL\n");
+		pkt_dir = PKT_DIR_UP;
+		//return NF_ACCEPT;
+	} else {
+		pkt_dir = get_packet_dir(skb->dev);
+	}
 #else
 	if (!in){
 		AF_ERROR("in is NULL\n");
@@ -197,16 +207,11 @@ static u_int32_t nfclient_hook(unsigned int hook,
 	if(PKT_DIR_UP != pkt_dir)
 		return NF_ACCEPT;
 
-    ethhdr = eth_hdr(skb);
-    if (ethhdr) {
-        memcpy(smac, ethhdr->h_source, ETH_ALEN);
-    } else {
-        memcpy(smac, &skb->cb[40], ETH_ALEN);
-    }
 
 	struct iphdr *iph = NULL;
 	iph = ip_hdr(skb);
 	if (!iph) {
+		AF_DEBUG("iph == NULL\n");
 		return NF_ACCEPT;
 	}
 

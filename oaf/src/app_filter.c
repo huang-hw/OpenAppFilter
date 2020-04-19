@@ -196,7 +196,7 @@ int add_app_feature(int appid, char *name, char *feature)
 	else if (0 == strcmp(proto_str, "udp"))
 		proto = IPPROTO_UDP;
 	else {
-		AF_DEBUG("proto %s is not support\n", proto_str);
+		AF_DEBUG("proto %s is not support, String:%s\n", proto_str, feature);
 		return -1;
 	}
 	int dst_port = 0;
