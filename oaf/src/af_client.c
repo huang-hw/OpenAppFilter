@@ -92,7 +92,7 @@ af_client_info_t *find_af_client_by_ip(unsigned int ip)
 	for(i = 0; i < MAX_AF_CLIENT_HASH_SIZE; i++){
 	    list_for_each_entry(node, &af_client_list_table[i], hlist){
 	    	if (node->ip == ip){
-				AF_LMT_DEBUG("match node->ip=%pI4, ip=%pI4\n", &node->ip, &ip);
+				AF_INFO("match node->ip=%pI4, ip=%pI4\n", &node->ip, &ip);
 				return node;
 	    	}
 	    }
@@ -119,7 +119,7 @@ nf_client_add(unsigned char *mac)
 	node->update_jiffies = jiffies;
     index = get_mac_hash_code(mac);
 	
-	AF_LMT_INFO("new client mac="MAC_FMT"\n", MAC_ARRAY(node->mac));
+	AF_INFO("new client mac="MAC_FMT"\n", MAC_ARRAY(node->mac));
 	total_client++;
 	list_add(&(node->hlist), &af_client_list_table[index]);
     return node;

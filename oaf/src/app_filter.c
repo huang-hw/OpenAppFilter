@@ -554,7 +554,7 @@ static void dump_flow_info(flow_info_t *flow)
 		return;
 	}
 	if (flow->l4_len > 0){
-		AF_LMT_INFO("src="NIPQUAD_FMT",dst="NIPQUAD_FMT",sport: %d, dport: %d, data_len: %d\n", 
+		AF_INFO("src="NIPQUAD_FMT",dst="NIPQUAD_FMT",sport: %d, dport: %d, data_len: %d\n", 
 			NIPQUAD(flow->src), NIPQUAD(flow->dst),	flow->sport, flow->dport, flow->l4_len);
 	}
 
@@ -791,6 +791,7 @@ void af_update_client_app_info(flow_info_t *flow)
 	if(flow->app_id <= 0)
 		return;
 	AF_CLIENT_LOCK_W();
+	AF_INFO("af_update_client_app_info: %u\n", flow->src);
 	node = find_af_client_by_ip(flow->src);
 	if(node){
 		__af_update_client_app_info(flow, node);
@@ -873,7 +874,7 @@ static u_int32_t app_filter_hook(unsigned int hook,
 #if defined(CONFIG_NF_CONNTRACK_MARK)
 		ct->mark |= APP_FILTER_DROP_BITS;
 #endif
-		AF_LMT_INFO("##drop appid = %d\n\n\n", flow.app_id);
+		AF_INFO("##drop appid = %d\n\n\n", flow.app_id);
 		return NF_DROP;
 	}
 	return NF_ACCEPT;
