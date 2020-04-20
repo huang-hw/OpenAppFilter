@@ -190,12 +190,12 @@ static u_int32_t nfclient_hook(unsigned int hook,
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
 	if(!skb->dev) {
-		AF_DEBUG("skb->dev == NULL MAC:"MAC_FMT"\n", MAC_ARRAY(node->mac));
+		AF_DEBUG("skb->dev == NULL MAC:"MAC_FMT"\n", MAC_ARRAY(smac));
 		pkt_dir = PKT_DIR_UP;
 		//return NF_ACCEPT;
 	} else {
 		pkt_dir = get_packet_dir(skb->dev);
-		AF_DEBUG("skb->dev->name:%s MAC:"MAC_FMT"\n", skb->dev->name, MAC_ARRAY(node->mac));
+		AF_DEBUG("skb->dev->name:%s MAC:"MAC_FMT"\n", skb->dev->name, MAC_ARRAY(smac));
 		pkt_dir = PKT_DIR_UP;
 	}
 #else
