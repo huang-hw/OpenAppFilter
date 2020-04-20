@@ -702,7 +702,7 @@ int app_filter_match(flow_info_t *flow)
 		
 		}
 		if (TEST_MODE_NOTMATCH())
-			dump_flow_info(&flow);
+			dump_flow_info(flow);
 	}
 	feature_list_read_unlock();
 	return AF_FALSE;
