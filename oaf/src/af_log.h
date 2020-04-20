@@ -25,8 +25,10 @@ extern int af_test_mode;
 #define AF_LMT_INFO(...)       	LLOG(2, ##__VA_ARGS__)
 #define AF_LMT_DEBUG(...)     	LLOG(3, ##__VA_ARGS__)
 
+#define TEST_MODE_ALL() (af_test_mode >= 9)
+#define TEST_MODE_NOTMATCH() (af_test_mode == 1)
+#define TEST_MODE_OTHER() (af_test_mode == 2)
 
-#define TEST_MODE() (af_test_mode)
 int af_log_init(void);
 int af_log_exit(void);
 #endif

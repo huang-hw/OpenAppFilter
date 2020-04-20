@@ -92,7 +92,7 @@ af_client_info_t *find_af_client_by_ip(unsigned int ip)
 	for(i = 0; i < MAX_AF_CLIENT_HASH_SIZE; i++){
 	    list_for_each_entry(node, &af_client_list_table[i], hlist){
 	    	if (node->ip == ip){
-				AF_INFO("match node->ip=%pI4, ip=%pI4\n", &node->ip, &ip);
+				AF_LMT_INFO("match node->ip=%pI4, ip=%pI4\n", &node->ip, &ip);
 				return node;
 	    	}
 	    }
@@ -195,7 +195,7 @@ static u_int32_t nfclient_hook(unsigned int hook,
 		//return NF_ACCEPT;
 	} else {
 		pkt_dir = get_packet_dir(skb->dev);
-		AF_DEBUG("skb->dev->name:%s MAC:"MAC_FMT"\n", skb->dev->name, MAC_ARRAY(smac));
+//		AF_DEBUG("skb->dev->name:%s MAC:"MAC_FMT"\n", skb->dev->name, MAC_ARRAY(smac));
 		pkt_dir = PKT_DIR_UP;
 	}
 #else

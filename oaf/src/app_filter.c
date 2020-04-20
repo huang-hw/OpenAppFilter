@@ -701,6 +701,8 @@ int app_filter_match(flow_info_t *flow)
 			
 		
 		}
+		if (TEST_MODE_NOTMATCH())
+			dump_flow_info(&flow);
 	}
 	feature_list_read_unlock();
 	return AF_FALSE;
@@ -791,7 +793,7 @@ void af_update_client_app_info(flow_info_t *flow)
 	if(flow->app_id <= 0)
 		return;
 	AF_CLIENT_LOCK_W();
-	AF_INFO("af_update_client_app_info: %u\n", flow->src);
+	AF_LMT_INFO("af_update_client_app_info: %u\n", flow->src);
 	node = find_af_client_by_ip(flow->src);
 	if(node){
 		__af_update_client_app_info(flow, node);
@@ -865,7 +867,7 @@ static u_int32_t app_filter_hook(unsigned int hook,
 		return NF_ACCEPT;
 	parse_http_proto(&flow);
 	parse_https_proto(&flow);
-	if (TEST_MODE())
+	if (TEST_MODE_ALL())
 		dump_flow_info(&flow);
 	app_filter_match(&flow);
 	af_update_client_app_info(&flow);
@@ -874,7 +876,7 @@ static u_int32_t app_filter_hook(unsigned int hook,
 #if defined(CONFIG_NF_CONNTRACK_MARK)
 		ct->mark |= APP_FILTER_DROP_BITS;
 #endif
-		AF_INFO("##drop appid = %d\n\n\n", flow.app_id);
+		AF_LMT_INFO("##drop appid = %d\n\n\n", flow.app_id);
 		return NF_DROP;
 	}
 	return NF_ACCEPT;
