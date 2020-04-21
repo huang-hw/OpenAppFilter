@@ -226,7 +226,7 @@ static u_int32_t nfclient_hook(unsigned int hook,
 		nfc = nf_client_add(smac);
 	}
 	if(nfc && nfc->ip != iph->saddr){
-		AF_DEBUG("update node "MAC_FMT" ip %pI4--->%pI4\n", MAC_ARRAY(nfc->mac), &nfc->ip, &iph->saddr);
+		AF_LMT_DEBUG("update node "MAC_FMT" ip %pI4--->%pI4\n", MAC_ARRAY(nfc->mac), &nfc->ip, &iph->saddr);
 		nfc->ip = iph->saddr;
 	}
 	AF_CLIENT_UNLOCK_W();

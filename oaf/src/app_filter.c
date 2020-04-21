@@ -529,7 +529,7 @@ static void dump_http_flow_info(http_proto_t *http) {
 		dump_str("Host", http->host_pos, http->host_len);
 	}
 
-	printk("--------------------------------------------------------\n\n\n");
+	printk("--------------------------------------------------------\n\n");
 }
 
 static void dump_https_flow_info(https_proto_t *https) {
@@ -545,7 +545,7 @@ static void dump_https_flow_info(https_proto_t *https) {
 		dump_str("https server name", https->url_pos, https->url_len);
 	}
 
-	printk("--------------------------------------------------------\n\n\n");
+	printk("--------------------------------------------------------\n\n");
 }
 static void dump_flow_info(flow_info_t *flow)
 {
@@ -560,13 +560,15 @@ static void dump_flow_info(flow_info_t *flow)
 
 	if (flow->l4_protocol == IPPROTO_TCP) {
 		if (AF_TRUE == flow->http.match) {
-			printk("-------------------http protocol-------------------------\n");
+			printk("-------------------http protocol---------------------\n");
 			printk("protocol:TCP , sport: %-8d, dport: %-8d, data_len: %-8d\n",
 					flow->sport, flow->dport, flow->l4_len);
 			dump_http_flow_info(&flow->http);
 		}
 		if (AF_TRUE == flow->https.match) {
-			printk("-------------------https protocol-------------------------\n");
+			printk("-------------------https protocol--------------------\n");
+			printk("protocol:TLS , sport: %-8d, dport: %-8d, data_len: %-8d\n",
+					flow->sport, flow->dport, flow->l4_len);
 			dump_https_flow_info(&flow->https);
 		}
 	}
@@ -715,6 +717,7 @@ u_int32_t af_get_timestamp_sec(void)
 //	struct timespec64 ts;
 //	ktime_get_ts64(&ts);
 //	return (u_int32_t)ts.tv_sec;
+	AF_LMT_DEBUG("now time :%u, %ul\n", ktime_get_real_seconds(), ktime_get_real_seconds());
 	return (u_int32_t)ktime_get_real_seconds();
 #else
 	struct timespec ts;
