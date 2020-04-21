@@ -1,7 +1,7 @@
 
 /*
 	author: destan19@126.com
-	Î¢ĞÅ¹«ÖÚºÅ: OpenWrt
+	å¾®ä¿¡å…¬ä¼—å·: OpenWrt
 	date:2019/1/10
 */
 #include <linux/init.h>
@@ -407,7 +407,7 @@ int parse_flow_base(struct sk_buff *skb, flow_info_t *flow)
 
 
 /*
-	desc: ½âÎöhttps urlĞÅÏ¢£¬±£´æµ½flowÖĞ
+	desc: è§£æhttps urlä¿¡æ¯ï¼Œä¿å­˜åˆ°flowä¸­
 	return:
 		-1: error
 		0: match
@@ -496,7 +496,7 @@ void parse_http_proto(flow_info_t *flow)
 				flow->http.host_len = i - start - 6;
 				//dump_str("host ", flow->http.host_pos, flow->http.host_len);
 			}
-			// ÅĞ¶ÏhttpÍ·²¿½áÊø
+			// åˆ¤æ–­httpå¤´éƒ¨ç»“æŸ
 			if (data[i + 2] == 0x0d && data[i + 3] == 0x0a){
 				flow->http.data_pos = data + i + 4;
 				flow->http.data_len = data_len - i - 4;
@@ -654,7 +654,7 @@ int af_match_one(flow_info_t *flow, af_feature_node_t *node)
 	if (flow->l4_len == 0)
 		return AF_FALSE;
 
-	// Æ¥Åä¶Ë¿Ú
+	// åŒ¹é…ç«¯å£
 	if (node->sport != 0 && flow->sport != node->sport ){
 		return AF_FALSE;
 	}
@@ -712,9 +712,10 @@ int app_filter_match(flow_info_t *flow)
 u_int32_t af_get_timestamp_sec(void)
 {
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,17,0)
-	struct timespec64 ts;
-	ktime_get_ts64(&ts);
-	return (u_int32_t)ts.tv_sec;
+//	struct timespec64 ts;
+//	ktime_get_ts64(&ts);
+//	return (u_int32_t)ts.tv_sec;
+	return (u_int32_t)ktime_get_real_seconds();
 #else
 	struct timespec ts;
 	ts = current_kernel_time();
@@ -748,14 +749,14 @@ int __af_update_client_app_info(flow_info_t *flow, af_client_info_t *node)
 
 	if(!found){
 		index = 0;
-		//³¬¹ı×î´ó¸öÊı£¬²éÑ¯×îÀÏµÄ
+		//è¶…è¿‡æœ€å¤§ä¸ªæ•°ï¼ŒæŸ¥è¯¢æœ€è€çš„
 		for(i = 0; i < MAX_RECORD_APP_NUM; i++){
 			if(node->visit_info[i].latest_time == 0){
 				index = i;
 				break;
 			}
 			if(node->visit_info[i].latest_time < node->visit_info[index].latest_time){
-				// Çå³ıÖ®Ç°µÄÊı¾İ
+				// æ¸…é™¤ä¹‹å‰çš„æ•°æ®
 				node->visit_info[i].total_num = 0;
 				node->visit_info[i].drop_num = 0;
 				index = i;
@@ -801,7 +802,7 @@ void af_update_client_app_info(flow_info_t *flow)
 	AF_CLIENT_UNLOCK_W();
 }
 
-/* ÔÚnetfilter¿ò¼Ü×¢²áµÄ¹³×Ó */
+/* åœ¨netfilteræ¡†æ¶æ³¨å†Œçš„é’©å­ */
 
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
@@ -925,7 +926,7 @@ void TEST_cJSON(void)
 
 
 /*
-	Ä£¿é³õÊ¼»¯
+	æ¨¡å—åˆå§‹åŒ–
 */
 static int __init app_filter_init(void)
 {
@@ -947,7 +948,7 @@ static int __init app_filter_init(void)
 }
 
 /*
-	Ä£¿éÍË³ö
+	æ¨¡å—é€€å‡º
 */
 static void app_filter_fini(void)
 {
