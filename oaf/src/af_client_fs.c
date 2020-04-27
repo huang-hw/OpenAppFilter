@@ -35,6 +35,8 @@ static void *af_client_get_first(struct seq_file *seq)
     for (st->bucket = 0;st->bucket < MAX_AF_CLIENT_HASH_SIZE;st->bucket++){
 		if(!list_empty(&(af_client_list_table[st->bucket]))){
 			st->head = &(af_client_list_table[st->bucket]);
+			    if (TEST_MODE_OTHER())
+       				printk("af_client_get_first: %d", st->bucket);
 			return	af_client_list_table[st->bucket].next;
 		}
     }
@@ -56,6 +58,8 @@ static void *af_client_get_next(struct seq_file *seq,
         for (;st->bucket < MAX_AF_CLIENT_HASH_SIZE;st->bucket++) {
             if(!list_empty(&(af_client_list_table[st->bucket]))){
                 st->head = &(af_client_list_table[st->bucket]);
+			    if (TEST_MODE_OTHER())
+       				printk("af_client_get_next: %d", st->bucket);		    
                 return  af_client_list_table[st->bucket].next;
             }
         }
