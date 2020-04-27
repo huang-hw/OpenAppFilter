@@ -212,7 +212,7 @@ static int af_client_open(struct inode *inode, struct file *file)
     if (TEST_MODE_OTHER()) {
     for (k = 0; k < MAX_AF_CLIENT_HASH_SIZE;k++)
         if(!list_empty(&(af_client_list_table[k]))){
-			head = &af_client_list_table[k];
+			head = (struct list_node *)&af_client_list_table[k];
 			node = (af_client_info_t *)af_client_list_table[k].next;
 			while ((void *)head != (void *)node) {
 				if (node == NULL) {
@@ -220,7 +220,7 @@ static int af_client_open(struct inode *inode, struct file *file)
 					break;
 				}
 				printk("N:%d, ip: %08x, jiff:%d", k, node->ip, node->update_jiffies);
-				node = node->next;
+				node = node->hlist.next;
 			}
         }	
     }
