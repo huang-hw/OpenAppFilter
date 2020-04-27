@@ -78,7 +78,9 @@ jobs:
           sed -i 's/set -eu/set -u/' scripts/mk-friendlywrt.sh
           sed -i 's/build_all()/build_uboot_kernel_fwrt_img()/' scripts/build.sh
           sed -i 's/build_all/build_kernel/' scripts/build.sh
+          sed -i 's/$(nproc)/4/' scripts/sd-fuse/build-kernel.sh
           cat scripts/build.sh
+          cat scripts/sd-fuse/build-kernel.sh
           sudo df
           sudo pwd
           #sudo du -d 2 -BM
