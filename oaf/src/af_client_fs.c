@@ -187,6 +187,9 @@ static const struct seq_operations nf_client_seq_ops = {
 
 static int af_client_open(struct inode *inode, struct file *file)
 {
+    int k;
+    struct list_node * head;
+    af_client_info_t *node;
     struct seq_file *seq;
     struct af_client_iter_state *iter;
     int err;
@@ -202,6 +205,22 @@ static int af_client_open(struct inode *inode, struct file *file)
         return err;
     }
 
+    if (TEST_MODE_OTHER()) {
+    for (k = 0; k < MAX_AF_CLIENT_HASH_SIZE;k++)
+        if(!list_empty(&(af_client_list_table[k]))){
+			head = &af_client_list_table[k];
+			node = (af_client_info_t *)af_client_list_table[k].next;
+			while ((void *)head != (void *)node) {
+				if (node == NULL) {
+					printk("N:%d, node is null", k);
+					break;
+				}
+				printk("N:%d, ip: %08x, jiff:%d", k, node->ip, node->update_jiffies);
+				node = node->next;
+			}
+        }	
+    }
+	
     seq = file->private_data;
     seq->private = iter;
     return 0;
