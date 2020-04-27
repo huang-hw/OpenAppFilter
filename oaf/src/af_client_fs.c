@@ -66,7 +66,9 @@ static void *af_client_get_next(struct seq_file *seq,
 static void *af_client_get_idx(struct seq_file *seq, loff_t pos)
 {
     void *head = af_client_get_first(seq);
-
+    if (TEST_MODE_OTHER())
+       printk("af_client_get_idx: %d", pos);
+	
     if (head)
         while (pos && (head = af_client_get_next(seq, head)))
                 pos--;
@@ -76,7 +78,11 @@ static void *af_client_get_idx(struct seq_file *seq, loff_t pos)
 
 static void *af_client_seq_start(struct seq_file *s, loff_t *pos)
 {
-	AF_CLIENT_LOCK_R();
+    AF_CLIENT_LOCK_R();
+    
+    if (TEST_MODE_OTHER())
+       printk("af_client_seq_start: %d", *pos);
+	
     if (*pos == 0){
         return SEQ_START_TOKEN;
     }
@@ -87,6 +93,8 @@ static void *af_client_seq_start(struct seq_file *s, loff_t *pos)
 static void *af_client_seq_next(struct seq_file *s, void *v, loff_t *pos)
 {    
     (*pos)++;
+    if (TEST_MODE_OTHER())
+       printk("af_client_seq_next: %d", *pos);
     if (v == SEQ_START_TOKEN)
         return af_client_get_idx(s, 0);
 
@@ -94,7 +102,10 @@ static void *af_client_seq_next(struct seq_file *s, void *v, loff_t *pos)
 }
 
 static void af_client_seq_stop(struct seq_file *s, void *v)
-{	
+{
+    if (TEST_MODE_OTHER())
+       printk("af_client_seq_stop");	
+	
 	seq_printf(s, "%s", "]");
 	AF_CLIENT_UNLOCK_R();
 }
@@ -107,10 +118,15 @@ static int af_client_seq_show(struct seq_file *s, void *v)
 	int i;
 	int j;
     if (v == SEQ_START_TOKEN) {
+	    if (TEST_MODE_OTHER())
+                printk("af_client_seq_show [");	    
 		index = 0;
 		seq_printf(s, "%s", "[");
         return 0;
     }
+    if (TEST_MODE_OTHER())
+        printk("af_client_seq_show %d", index);	  
+	
 	if(index > 0)
 		seq_printf(s, "%s", ",");
 	index++;
@@ -174,7 +190,8 @@ static int af_client_open(struct inode *inode, struct file *file)
     struct seq_file *seq;
     struct af_client_iter_state *iter;
     int err;
-
+    if (TEST_MODE_OTHER())
+       printk("af_client_open");
     iter = kzalloc(sizeof(*iter), GFP_KERNEL);
     if (!iter)
         return -ENOMEM;
