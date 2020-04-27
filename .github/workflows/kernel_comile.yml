@@ -4,7 +4,7 @@ on:
     paths:
       #- 'CHANGELOG.md'
       - '.github/workflows/kernel_comile.yml'
-      - '*.c'
+      - 'oaf/src/*.c'
 jobs:
   build:
     runs-on: ubuntu-latest
