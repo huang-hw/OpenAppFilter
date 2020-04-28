@@ -220,7 +220,7 @@ static int af_client_open(struct inode *inode, struct file *file)
 					break;
 				}
 				printk("N:%d, ip: %08x, jiff:%d", k, node->ip, node->update_jiffies);
-				node = node->hlist.next;
+				node = (af_client_info_t *)node->hlist.next;
 			}
         }	
     }
