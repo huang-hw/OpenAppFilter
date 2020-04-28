@@ -107,11 +107,12 @@ static void *af_client_seq_next(struct seq_file *s, void *v, loff_t *pos)
 
 static void af_client_seq_stop(struct seq_file *s, void *v)
 {
+    struct af_client_iter_state *st = s->private;
     if (TEST_MODE_OTHER())
        printk("af_client_seq_stop");	
-	
+    if (st->bucket >= MAX_AF_CLIENT_HASH_SIZE)
 	seq_printf(s, "%s", "]");
-	AF_CLIENT_UNLOCK_R();
+    AF_CLIENT_UNLOCK_R();
 }
 
 static int af_client_seq_show(struct seq_file *s, void *v)
